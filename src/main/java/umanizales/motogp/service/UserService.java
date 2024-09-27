@@ -21,6 +21,8 @@ public class UserService {
     public UserService(){
         listUsers = new ArrayList<>();
         listRoles = new ArrayList<>();
+
+        listUsers.add(new User("jmn@gmail.com", "perrogus", new Role(1, "ADMIN", new ArrayList<>())));
     }
 
     public List<User> getListUsers(){
