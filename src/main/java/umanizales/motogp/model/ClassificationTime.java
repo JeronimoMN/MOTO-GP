@@ -8,9 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClassificationTime {
-    private long code;
+    private int code;
     private Motorcycle motorcycle;
     private float time;
-    private Classification classification;
 
 }

@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Role {
-    private Long code;
+    private int code;
     private String description;
     private List<User> users;
 

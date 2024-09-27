@@ -2,6 +2,7 @@ package umanizales.motogp.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import umanizales.motogp.model.DTO.PilotsDTO;
 
 import java.util.List;
 

@@ -10,10 +10,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Motorcycle {
-    private Long codeMotorcycle;
-    private boolean state;
+    private int codeMotorcycle;
     private String color;
+    private boolean state;
     private String pilot;
-    private List<ClassificationTime> classificationTimeList;
-
 }

@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UserRoleDTO {
-    private String email;
-    private String password;
-    private Long role_code;
+public class PilotTimeDTO {
+    private int code;
+    private int codeMotorcycle;
+    private float time;
 }
