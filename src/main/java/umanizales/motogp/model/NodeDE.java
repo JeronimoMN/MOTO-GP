@@ -10,7 +10,7 @@ public class NodeDE {
     private NodeDE previous;
     private NodeDE next;
 
-    public NodeDE(Motorcycle data){
+    public NodeDE(Motorcycle data) {
         this.data = data;
     }
 }

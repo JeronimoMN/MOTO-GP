@@ -18,53 +18,45 @@ public class UserService {
     private List<Role> listRoles;
     private User currentUser;
 
-    public UserService(){
+    public UserService() {
         listUsers = new ArrayList<>();
         listRoles = new ArrayList<>();
 
         listUsers.add(new User("jmn@gmail.com", "perrogus", new Role(1, "ADMIN", new ArrayList<>())));
     }
 
-    public List<User> getListUsers(){
-        return listUsers;
-    }
-
-    public List<Role> getListRoles(){
-        return listRoles;
-    }
-
-    public String saveRole(Role role){
+    public String saveRole(Role role) {
         listRoles.add(role);
         return "Role Guardado";
     }
 
-    public String saveUser(User user){
+    public String saveUser(User user) {
         listUsers.add(user);
         return "Usuario Guardado";
     }
 
-    public String deleteRole(Role role){
+    public String deleteRole(Role role) {
         listRoles.remove(role);
         return "Rol Eliminado!";
     }
 
-    public String deleteUser(User user){
+    public String deleteUser(User user) {
         listUsers.remove(user);
         return "Usuario Eliminado!";
     }
 
-    public Role findRole(Long code){
-        for (Role role: getListRoles()){
-            if(Objects.equals(role.getCode(), code)){
+    public Role findRole(Long code) {
+        for (Role role : getListRoles()) {
+            if (Objects.equals(role.getCode(), code)) {
                 return role;
             }
         }
         return null;
     }
 
-    public User chooseUser(UserDTO user){
-        for (User u: getListUsers()){
-            if(Objects.equals(u.getEmail(), user.getEmail()) && Objects.equals(u.getPassword(), user.getPassword())){
+    public User chooseUser(UserDTO user) {
+        for (User u : getListUsers()) {
+            if (Objects.equals(u.getEmail(), user.getEmail()) && Objects.equals(u.getPassword(), user.getPassword())) {
                 this.currentUser = u;
                 return u;
             }

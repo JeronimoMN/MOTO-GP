@@ -11,5 +11,4 @@ public class ClassificationTime {
     private int code;
     private Motorcycle motorcycle;
     private float time;
-
 }

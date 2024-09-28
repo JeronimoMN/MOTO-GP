@@ -12,29 +12,29 @@ import java.util.List;
 public class MotorcycleService {
     private ArrayList<Motorcycle> listMotorcycles;
 
-    public MotorcycleService(){
+    public MotorcycleService() {
         listMotorcycles = new ArrayList<>();
         listMotorcycles.add(new Motorcycle(1, "black", true, "marcus"));
-        listMotorcycles.add(new Motorcycle(2, "blue",  true, "marcus" ));
+        listMotorcycles.add(new Motorcycle(2, "blue", true, "marcus"));
         listMotorcycles.add(new Motorcycle(3, "red", true, "marcus"));
-        listMotorcycles.add(new Motorcycle(4,  "purple", true, "marcus"));
+        listMotorcycles.add(new Motorcycle(4, "purple", true, "marcus"));
     }
 
-    public Motorcycle getMotorcycle(int codeMotorcycle){
+    public Motorcycle getMotorcycle(int codeMotorcycle) {
         System.out.println(listMotorcycles.toArray().length);
         return listMotorcycles.get(codeMotorcycle);
     }
 
-    public List<Motorcycle> getMotorcycles(){
+    public List<Motorcycle> getMotorcycles() {
         return listMotorcycles;
     }
 
-    public void saveMotorcycle (Motorcycle motorcycle){
+    public void saveMotorcycle(Motorcycle motorcycle) {
         listMotorcycles.add(motorcycle);
         System.out.println(listMotorcycles);
     }
 
-    public String deleteMotorcycle (Motorcycle motorcycle){
+    public String deleteMotorcycle(Motorcycle motorcycle) {
         listMotorcycles.remove(motorcycle);
         return "The motorcycle was successfully removed!";
     }

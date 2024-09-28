@@ -17,8 +17,8 @@ public class MotorcycleController {
     private UserService userService;
 
     @GetMapping
-    public List<Motorcycle> getListMotorcycles(){
-        if(userService.getCurrentUser().getRole().getCode() == 1){
+    public List<Motorcycle> getListMotorcycles() {
+        if (userService.getCurrentUser().getRole().getCode() == 1) {
             return motorcycleService.getMotorcycles();
         }
         return null;
@@ -26,8 +26,8 @@ public class MotorcycleController {
 
 
     @PostMapping(path = "/search")
-    public Motorcycle findMotorcycle(@RequestBody int codeMotorcycle){
-        if(userService.getCurrentUser().getRole().getCode() == 1){
+    public Motorcycle findMotorcycle(@RequestBody int codeMotorcycle) {
+        if (userService.getCurrentUser().getRole().getCode() == 1) {
             return motorcycleService.getMotorcycle(codeMotorcycle);
         }
         return null;
@@ -35,8 +35,8 @@ public class MotorcycleController {
 
 
     @PostMapping
-    public String saveMotorcycle (@RequestBody Motorcycle motorcycle){
-        if(userService.getCurrentUser().getRole().getCode() == 1){
+    public String saveMotorcycle(@RequestBody Motorcycle motorcycle) {
+        if (userService.getCurrentUser().getRole().getCode() == 1) {
             motorcycleService.saveMotorcycle(motorcycle);
             return "list";
         }
@@ -44,8 +44,8 @@ public class MotorcycleController {
     }
 
     @DeleteMapping
-    public String deleteMotorcycle(@RequestBody Motorcycle motorcycle){
-        if(userService.getCurrentUser().getRole().getCode() == 1){
+    public String deleteMotorcycle(@RequestBody Motorcycle motorcycle) {
+        if (userService.getCurrentUser().getRole().getCode() == 1) {
             return motorcycleService.deleteMotorcycle(motorcycle);
         }
         return "User must be administrator";

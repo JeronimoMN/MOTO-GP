@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import umanizales.motogp.model.ClassificationTime;
 import umanizales.motogp.model.DTO.PilotTimeDTO;
-import umanizales.motogp.model.DTO.PilotsDTO;
 import umanizales.motogp.model.Motorcycle;
 import umanizales.motogp.service.RaceService;
 import umanizales.motogp.service.UserService;
@@ -21,28 +20,20 @@ public class RaceController {
     private UserService userService;
 
     @GetMapping(path = "/get_list_motorcycles")
-    public List<Motorcycle> getMotor(){
+    public List<Motorcycle> getMotor() {
         System.out.println(raceService.getList());
         return raceService.getList();
     }
 
     @GetMapping(path = "/get_classification")
-    public List<ClassificationTime> getClassification(){
-        return raceService.getListClassificationTime();
+    public List<ClassificationTime> getClassification() {
+        return raceService.getRace().getClassification().getGrill();
     }
 
-
     @PostMapping(path = "/times")
-    public String pilotTime (@RequestBody PilotTimeDTO pilotTimeDTO){
-        if(userService.getCurrentUser().getRole().getCode() == 1){
-
-            System.out.println(raceService.getClassification());
-
-            if(raceService.getClassification().isState()){
-                System.out.println(raceService.getMotorcycleService().getMotorcycle(0));
-                System.out.println(raceService.getMotorcycleService().getMotorcycles().toArray().length);
-
-
+    public String pilotTime(@RequestBody PilotTimeDTO pilotTimeDTO) {
+        if (userService.getCurrentUser().getRole().getCode() == 1) {
+            if (raceService.getClassification().isState()) {
                 ClassificationTime classificationTime = new ClassificationTime(raceService.hashCode(), raceService.getMotorcycleService().getMotorcycle(pilotTimeDTO.getCodeMotorcycle()),
                         pilotTimeDTO.getTime());
                 return raceService.saveTimeMotorcycle(classificationTime);
@@ -53,11 +44,11 @@ public class RaceController {
     }
 
     @PostMapping(path = "/state")
-    public String setState(@RequestBody String state){
-        if(userService.getCurrentUser().getRole().getCode() == 1){
-            if(raceService.setRaceState(state)){
+    public String setState(@RequestBody String state) {
+        if (userService.getCurrentUser().getRole().getCode() == 1) {
+            if (raceService.setRaceState(state)) {
                 return "state actualized";
-            }else{
+            } else {
                 return "invalid state, it must be: initialized, closed or in process";
             }
         }
@@ -65,12 +56,11 @@ public class RaceController {
     }
 
     @GetMapping(path = "/start")
-    public String startRace(){
-        if(Objects.equals(raceService.getRace().getState(), "in process")){
+    public String startRace() {
+        if (Objects.equals(raceService.getRace().getState(), "in process")) {
             raceService.startRace();
             return "Race started";
         }
         return "Race must be in process to start it";
     }
-
 }
