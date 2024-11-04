@@ -3,6 +3,7 @@
     import lombok.Data;
     import org.springframework.stereotype.Service;
     import umanizales.motogp.model.*;
+    import umanizales.motogp.model.DTO.PilotsDTO;
 
     import java.util.ArrayList;
     import java.util.List;
@@ -29,7 +30,11 @@
             race = new Race(classification, "in process", new ListDE(null, 0), new ArrayList<>());
         }
 
-        public String saveTimeMotorcycle(ClassificationTime classificationTime){
+        public List<Motorcycle> getListDEMotorcycle(){
+            return race.getListDE().getListMotorcycles();
+        }
+
+        public void saveTimeMotorcycle(ClassificationTime classificationTime){
             race.setState("in process");
             if(classification.getGrill() == null){
                 classification.setGrill(new ArrayList<>());
@@ -47,14 +52,11 @@
                 }
                 classification.setGrill(list);
             }
-            return "Time successfully added!";
         }
 
         public boolean setRaceState(String state){
             if(Objects.equals(state, "initialized") || Objects.equals(state, "closed") || Objects.equals(state, "in process")){
-                if(Objects.equals(race.getState(), "initialized")){
-                    return true;
-                }
+                return Objects.equals(race.getState(), "initialized");
             }
             return false;
         }
@@ -66,8 +68,52 @@
             race.setState("initialized");
         }
 
-        public List<Motorcycle> getList(){
-            System.out.println(race.getState());
+        public String pilotAdvance(Motorcycle motorcycle, int num){
+            if(race.getListDE().advance(motorcycle.getPilot(), num)){
+                return "Pilot advanced";
+            }else {
+                return "Invalid number";
+            }
+        }
+
+        public String pilotLosePosition(Motorcycle motorcycle, int num){
+            if(race.getListDE().losePosition(motorcycle.getPilot(), num)){
+                return "Pilot lose positions";
+            }else {
+                return "Invalid number";
+            }
+        }
+
+        public String pilotFell(Motorcycle motorcycle){
+            race.getPilotsFelt().add(new PilotsDTO(motorcycle, race.getListDE().deletePilot(motorcycle.getPilot())));
+            System.out.println(race.getPilotsFelt());
+            return "Pilot out for the moment";
+        }
+
+        public String pilotReEntry(Motorcycle motorcycle, int pos){
+            for (PilotsDTO pilotsDTO: this.race.getPilotsFelt()){
+                if(pilotsDTO.getMotorcycle().equals(motorcycle)){
+                    if(pos > pilotsDTO.getPosition()){
+                        race.getListDE().addPosition(pos, motorcycle);
+                        race.getPilotsFelt().remove(pilotsDTO);
+                        return "Pilot reinstated";
+                    }
+                    return "Invalid position for reinstatement";
+                }
+            }
+            return "There is no match with the motorcycle";
+        }
+
+        public String pilotExit(Motorcycle motorcycle){
+            motorcycle.setState(false);
+            motorcycleService.saveMotorcycle(motorcycle);
+            race.getListDE().deletePilot(motorcycle.getPilot());
+            return "pilot out of race!";
+        }
+
+        public List<Motorcycle> endRace(){
+            classification.setState(false);
+            race.setState("closed");
             return race.getListDE().getListMotorcycles();
         }
     }

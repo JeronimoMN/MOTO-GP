@@ -21,37 +21,23 @@ public class UserService {
     public UserService() {
         listUsers = new ArrayList<>();
         listRoles = new ArrayList<>();
-
         listUsers.add(new User("jmn@gmail.com", "perrogus", new Role(1, "ADMIN", new ArrayList<>())));
     }
 
-    public String saveRole(Role role) {
+    public void saveRole(Role role) {
         listRoles.add(role);
-        return "Role Guardado";
     }
 
-    public String saveUser(User user) {
+    public void saveUser(User user) {
         listUsers.add(user);
-        return "Usuario Guardado";
     }
 
-    public String deleteRole(Role role) {
+    public void deleteRole(Role role) {
         listRoles.remove(role);
-        return "Rol Eliminado!";
     }
 
-    public String deleteUser(User user) {
+    public void deleteUser(User user) {
         listUsers.remove(user);
-        return "Usuario Eliminado!";
-    }
-
-    public Role findRole(Long code) {
-        for (Role role : getListRoles()) {
-            if (Objects.equals(role.getCode(), code)) {
-                return role;
-            }
-        }
-        return null;
     }
 
     public User chooseUser(UserDTO user) {
@@ -59,6 +45,15 @@ public class UserService {
             if (Objects.equals(u.getEmail(), user.getEmail()) && Objects.equals(u.getPassword(), user.getPassword())) {
                 this.currentUser = u;
                 return u;
+            }
+        }
+        return null;
+    }
+
+    public Role findRole(int code) {
+        for (Role role : getListRoles()) {
+            if (Objects.equals(role.getCode(), code)) {
+                return role;
             }
         }
         return null;

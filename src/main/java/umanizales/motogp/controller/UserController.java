@@ -21,31 +21,36 @@ public class UserController {
         return userService.getListRoles();
     }
 
-    @PostMapping(path = "/save_role")
-    public String saveRole(@RequestBody Role role) {
-        return userService.saveRole(role);
-    }
-
-    @DeleteMapping(path = "/delete_role")
-    private String deleteRole(@RequestBody Role role) {
-        return userService.deleteRole(role);
-    }
-
     @GetMapping(path = "/users")
     public List<User> getUsers() {
         return userService.getListUsers();
     }
 
+    @PostMapping(path = "/save_role")
+    public String saveRole(@RequestBody Role role) {
+        userService.saveRole(role);
+        return "Role saved successfully";
+    }
+
+    @DeleteMapping(path = "/delete_role")
+    private String deleteRole(@RequestBody Role role) {
+        userService.deleteRole(role);
+        return "Role deleted successfully!";
+    }
+
+
     @PostMapping(path = "/save_user")
     public String saveUser(@RequestBody UserRoleDTO userRoleDTO) {
         User newUser = new User(userRoleDTO.getEmail(), userRoleDTO.getPassword(),
                 userService.findRole(userRoleDTO.getRole_code()));
-        return userService.saveUser(newUser);
+        userService.saveUser(newUser);
+        return "User saved successfully";
     }
 
     @DeleteMapping(path = "/delete_user")
     private String deleteRole(@RequestBody User user) {
-        return userService.deleteUser(user);
+        userService.deleteUser(user);
+        return "User deleted successfully!";
     }
 
     @PostMapping(path = "/choose_user")

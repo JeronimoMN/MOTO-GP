@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import umanizales.motogp.model.ClassificationTime;
 import umanizales.motogp.model.DTO.PilotTimeDTO;
+import umanizales.motogp.model.DTO.PilotsDTO;
 import umanizales.motogp.model.Motorcycle;
 import umanizales.motogp.service.RaceService;
 import umanizales.motogp.service.UserService;
@@ -19,13 +20,12 @@ public class RaceController {
     @Autowired
     private UserService userService;
 
-    @GetMapping(path = "/get_list_motorcycles")
-    public List<Motorcycle> getMotor() {
-        System.out.println(raceService.getList());
-        return raceService.getList();
+    @GetMapping(path = "/get_listDE_motorcycles")
+    public List<Motorcycle> getListDEMotorcycles() {
+        return raceService.getListDEMotorcycle();
     }
 
-    @GetMapping(path = "/get_classification")
+    @GetMapping(path = "/classifications")
     public List<ClassificationTime> getClassification() {
         return raceService.getRace().getClassification().getGrill();
     }
@@ -36,7 +36,8 @@ public class RaceController {
             if (raceService.getClassification().isState()) {
                 ClassificationTime classificationTime = new ClassificationTime(raceService.hashCode(), raceService.getMotorcycleService().getMotorcycle(pilotTimeDTO.getCodeMotorcycle()),
                         pilotTimeDTO.getTime());
-                return raceService.saveTimeMotorcycle(classificationTime);
+                raceService.saveTimeMotorcycle(classificationTime);
+                return "Time successfully added!";
             }
             return "classification doesn't exists";
         }
@@ -62,5 +63,53 @@ public class RaceController {
             return "Race started";
         }
         return "Race must be in process to start it";
+    }
+
+    @PostMapping(path = "/advance")
+    public String pilotAdvance (@RequestBody PilotsDTO pilotsDTO){
+        if(Objects.equals(raceService.getRace().getState(), "initialized")){
+            return raceService.pilotAdvance(pilotsDTO.getMotorcycle(), pilotsDTO.getPosition());
+        }
+        return "Race hasn't started";
+    }
+
+    @PostMapping(path = "/lose_position")
+    public String pilotLoosePosition (@RequestBody PilotsDTO pilotsDTO){
+        if(Objects.equals(raceService.getRace().getState(), "initialized")){
+            return raceService.pilotLosePosition(pilotsDTO.getMotorcycle(), pilotsDTO.getPosition());
+        }
+        return "Race hasn't started";
+    }
+
+    @PostMapping(path = "/pilot_fell")
+    public String pilotFell (@RequestBody Motorcycle motorcycle){
+        if (Objects.equals(raceService.getRace().getState(), "initialized")){
+            return raceService.pilotFell(motorcycle);
+        }
+        return "La carrera no ha iniciado";
+    }
+
+    @PostMapping(path = "/pilot_entry")
+    public String pilotEntry(@RequestBody PilotsDTO pilotsDTO){
+        if(Objects.equals(raceService.getRace().getState(), "initialized")){
+            return raceService.pilotReEntry(pilotsDTO.getMotorcycle(), pilotsDTO.getPosition());
+        }
+        return "La carrera no ha iniciado";
+    }
+
+    @PostMapping(path="/takeout_pilot")
+    public String pilotExit(@RequestBody Motorcycle motorcycle){
+        if (Objects.equals(raceService.getRace().getState(), "initialized")) {
+            return raceService.pilotExit(motorcycle);
+        }
+        return "Race hasn't started";
+    }
+
+    @GetMapping(path = "/end")
+    public List<Motorcycle> endRace(){
+        if(Objects.equals(raceService.getRace().getState(), "initialized")){
+            return raceService.endRace();
+        }
+        return null;
     }
 }

@@ -23,7 +23,7 @@ public class ListDE {
         return motorcycles;
     }
 
-    public String addEnd(Motorcycle motorcycle) {
+    public void addEnd(Motorcycle motorcycle) {
         NodeDE newNode = new NodeDE(motorcycle);
         if (head == null) {
             head = newNode;
@@ -36,120 +36,138 @@ public class ListDE {
             newNode.setPrevious(temp);
         }
         size++;
-        return "Motorcycle added at the end";
     }
 
-    public String addBeggining(Motorcycle motorcycle) {
-        NodeDE newNode = new NodeDE(motorcycle);
-        if (head == null) {
-            head = newNode;
+    public void addBeginning(Motorcycle motorcycle) {
+        if (this.head == null) {
+            this.head = new NodeDE(motorcycle);
         } else {
-            newNode.setNext(head);
-            head.setPrevious(newNode);
+            NodeDE newNode = new NodeDE(motorcycle);
+            newNode.setNext(this.head);
+            this.head.setPrevious(newNode);
             this.head = newNode;
+
         }
         size++;
-        return "Agredada al inicio";
     }
 
-    public int deletePilot(String pilot) {
-        int count = 0;
-        if (head != null) {
-            if (Objects.equals(head.getData().getPilot(), pilot)) {
-                head = head.getNext();
-                size--;
-                count++;
+    public void addPosition(int position, Motorcycle motorcycle) {
+        if (position == 1) {
+            addBeginning(motorcycle);
+        } else {
+            NodeDE temp = this.head;
+            NodeDE newNode = new NodeDE(motorcycle);
+            int sitio = 1;
+
+            while (sitio < (position - 1)) {
+                temp = temp.getNext();
+                sitio++;
+            }
+
+            newNode.setNext(temp.getNext());
+            newNode.setPrevious(temp);
+
+            if (temp.getNext() != null) {
+                temp.getNext().setPrevious(newNode);
+            }
+            temp.setNext(newNode);
+            this.size++;
+        }
+    }
+
+    public boolean advance(String pilot, int num) {
+        NodeDE temp = this.head;
+        int count = 1;
+
+        while (!Objects.equals(temp.getData().getPilot(), pilot)) {
+            temp = temp.getNext();
+            count++;
+        }
+        if (num < count) {
+            addPosition(count - num, temp.getData());
+            temp = temp.getPrevious();
+            temp.setNext(temp.getNext().getNext());
+
+            if (temp.getNext() != null) {
+                temp.getNext().setPrevious(temp);
+            }
+            this.size--;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean losePosition(String pilot, int num) {
+        NodeDE temp = this.head;
+        int count = 1;
+
+        while (!Objects.equals(temp.getData().getPilot(), pilot)) {
+            temp = temp.getNext();
+            count++;
+        }
+
+        if ((count + num) <= this.size) {
+
+            //ELIMINAR  EL NODO ORIGINAL
+
+            if (temp.getPrevious() != null) {
+                //Si hay algo atras, lo enlazo con lo de adelante
+                temp.getPrevious().setNext(temp.getNext());
             } else {
+                //Si antes del temporal no hay nada, quiere decir que es la cabeza.
+                this.head = this.head.getNext();
+            }
+
+            if (temp.getNext() != null) {
+                //Si hay algo adelante, lo enlazo con lo de atras
+                temp.getNext().setPrevious(temp.getPrevious());
+            }
+
+            size--;
+            //--------------------------------------------------
+            //Si queda de ultimo en la carrera
+            if ((count + num) == this.size + 1) {
+                addEnd(temp.getData());
+            }
+            //Si pierde n posiciones.
+            else if ((count + num) < this.size + 1) {
+                addPosition((count + num), temp.getData());
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public int deletePilot(String pilot){
+        int count = 0;
+
+        if(this.head != null){
+
+            //Si esta en la cabeza
+            if(Objects.equals(this.head.getData().getPilot(), pilot)){
+                this.head = this.head.getNext();
+                count++;
+            }
+
+            //Si no
+            else{
                 count = 1;
-                NodeDE temp = head;
-                while (true) {
-                    if (Objects.equals(temp.getNext().getData().getPilot(), pilot)) {
+                NodeDE temp = this.head;
+                while(true){
+                    if(Objects.equals(temp.getNext().getData().getPilot(), pilot)){
                         temp.setNext(temp.getNext().getNext());
-                        if (temp.getNext() != null) {
+                        if(temp.getNext() != null){
                             temp.getNext().setPrevious(temp);
                         }
                         count++;
                         size--;
                         break;
                     }
-                    temp = temp.getNext();
-                    count = count + 1;
-
+                    temp= temp.getNext();
+                    count= count+1;
                 }
             }
         }
         return count;
-    }
-
-    public void addPosition(int position, Motorcycle motorcycle) {
-        if (position == 1) {
-            addBeggining(motorcycle);
-        } else {
-            NodeDE temp = head;
-            int place = 1;
-            while (place < (position - 1)) {
-                temp = temp.getNext();
-                place += 1;
-            }
-            NodeDE newNode = new NodeDE(motorcycle);
-            newNode.setPrevious(temp);
-
-            if (temp.getNext() != null) {
-                newNode.setNext(temp.getNext());
-                temp.getNext().setPrevious(newNode);
-            }
-            temp.setNext(newNode);
-            size++;
-        }
-    }
-
-    public boolean advance(String pilot, int num) {
-        if (size > 1) {
-            int count = 1;
-            NodeDE temp = head;
-            while (!Objects.equals(temp.getData().getPilot(), pilot)) {
-                count++;
-                temp = temp.getNext();
-            }
-            if (num < count) {
-                addPosition((count - num), temp.getNext().getData());
-                temp = temp.getPrevious();
-                temp.setNext(temp.getNext().getNext());
-                if (temp.getNext() != null) {
-                    temp.getNext().setPrevious(temp);
-                }
-                size--;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean losePosition(String pilot, int num) {
-        if (size > 1) {
-            int count = 1;
-            NodeDE temp = head;
-            while (!Objects.equals(temp.getData().getPilot(), pilot)) {
-                count++;
-                temp = temp.getNext();
-            }
-            if ((count + num) <= size) {
-
-                if ((count + num) == size) {
-                    addEnd(temp.getData());
-                } else if ((count + num) < size) {
-                    addPosition((count + num), temp.getData());
-                }
-                if (head == temp) {
-                    head = head.getNext();
-                } else {
-                    temp = temp.getPrevious();
-                    temp.setNext(temp.getNext().getNext());
-                    temp.getNext().setPrevious(temp);
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 }
